@@ -191,7 +191,3 @@ The callback remembers `message` and prints it after two seconds.
 **Remember:** A closure allows a function to retain access to variables from its lexical environment even after the outer function has returned.
 
 ---
-
-## ▶️ Watch on YouTube
-
-[![Closures in JavaScript](https://img.youtube.com/vi/qikxEIxsXco/0.jpg)](https://www.youtube.com/watch?v=qikxEIxsXco)
