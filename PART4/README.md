@@ -1,4 +1,4 @@
-# 🚀 Episode 4: Functions and Variable Environments
+#  Episode 4: Functions and Variable Environments
 
 ## 1. Example
 
