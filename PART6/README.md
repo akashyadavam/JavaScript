@@ -1,4 +1,4 @@
-# 🚀 Episode 6: `undefined` vs `not defined` in JavaScript
+#  Episode 6: `undefined` vs `not defined` in JavaScript
 
 ## 1. What is `undefined`?
 
@@ -80,6 +80,3 @@ The same variable `a` can hold a number, a boolean and then a string.
 
 ---
 
-## ▶️ Watch on YouTube
-
-[![Undefined vs Not Defined in JavaScript](https://img.youtube.com/vi/B7iF6G3EyIk/0.jpg)](https://www.youtube.com/watch?v=B7iF6G3EyIk)
