@@ -107,6 +107,12 @@ Namaste Javascript
 - Har callback apni iteration wali `i` ko closure ke through access karta hai.
 
 ---
+<img width="942" height="391" alt="Screenshot (1294)" src="https://github.com/user-attachments/assets/97e197df-fc82-425c-8070-9a1891ba161c" />
+<img width="952" height="357" alt="Screenshot (1295)" src="https://github.com/user-attachments/assets/abcce488-9ee9-4ada-9a49-1b1f10d9d008" />
+<img width="953" height="387" alt="Screenshot (1296)" src="https://github.com/user-attachments/assets/f3f3f128-1c13-459e-aef3-85334923da0e" />
+
+
+
 
 ## 4.  Solution 2: Using `var` (Without `let`)
 
