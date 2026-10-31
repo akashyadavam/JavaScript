@@ -155,3 +155,5 @@ console.log(a); // 20
 | `let` | Block-scoped |
 | `const` | Block-scoped |
 | Shadowing | Inner declaration uses the same name as an outer variable
+<img width="887" height="662" alt="Screenshot (1292)" src="https://github.com/user-attachments/assets/0866b7d9-a8e4-47a3-a2c2-d2fed662bf90" />
+
