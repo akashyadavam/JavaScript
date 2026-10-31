@@ -89,7 +89,8 @@ printAll();
 // A
 // B
 // C
-```<img width="817" height="736" alt="Screenshot (1297)" src="https://github.com/user-attachments/assets/aa837096-61f7-4e28-9f91-2e5befe0bb2d" />
+```
+<img width="817" height="736" alt="Screenshot (1297)" src="https://github.com/user-attachments/assets/aa837096-61f7-4e28-9f91-2e5befe0bb2d" />
 
 
 **Explanation:**
