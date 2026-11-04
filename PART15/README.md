@@ -296,7 +296,17 @@ These animations help visualize how JavaScript handles synchronous code, asynchr
 <img width="880" height="495" alt="microtask2" src="https://github.com/user-attachments/assets/703f3f58-1652-4417-8e38-ff1bea4df4fd" />
 <img width="880" height="495" alt="microtask3" src="https://github.com/user-attachments/assets/9c56b011-69c3-49bc-95a0-40daa0267274" />
 <img width="880" height="495" alt="microtask4" src="https://github.com/user-attachments/assets/826ac09d-e5f4-437c-a7bc-f7fff85df0b2" />
+<img width="880" height="495" alt="microtask5" src="https://github.com/user-attachments/assets/7f2510b5-79a3-492b-be22-e103f745d391" />
+
 <img width="880" height="495" alt="microtask6" src="https://github.com/user-attachments/assets/39c1852f-5ef3-47f2-b1b5-550671a1df7a" />
+
+
+
+
+
+
+
+
 
 
 
