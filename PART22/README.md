@@ -364,7 +364,3 @@ Next Step
 
 > Promise Chaining makes asynchronous code cleaner, readable, and easier to manage.
 
----
-v=U74BJcr8NeQ&list=PLlasXeu85E9eWOpw9jxHOQyGMRiBZ60aX&index=4)
-
-[Watch on YouTube – Namaste JavaScript](https://www.youtube.com/watch?v=U74BJcr8NeQ)
