@@ -1,25 +1,30 @@
-# Episode 22: Creating a Promise in JavaScript
+# Episode 22: Creating a Promise, Chaining & Error Handling
 
-In the previous episode, we learned how to consume Promises using `.then()`. Now, we will learn how to **create our own Promises using the JavaScript Promise constructor** and return them from a function.
+In this episode, we will learn how to create Promises, handle errors using `.catch()`, and chain multiple asynchronous operations using `.then()`.
 
 ## What We Will Learn
 
-- Consumer and Producer Parts of a Promise
-- Creating Promises using `new Promise()`
-- Understanding `resolve()` and `reject()`
-- Implementing the `createOrder()` function
-- Promise execution flow and important points
+- Creating a Promise using `new Promise()`
+- Understanding Promise states
+- Handling errors using `.catch()`
+- Promise Chaining
+- Returning values and Promises from `.then()`
+- Handling errors at different levels using multiple `.catch()` blocks
 
 ---
 
-## 1. Consumer Part of a Promise
+## 1. Creating a Promise – Producer & Consumer
 
-First, let's revise how we consume a Promise.
+A Promise has two main parts:
+
+- **Producer:** Creates and returns a Promise.
+- **Consumer:** Receives and handles the Promise.
+
+### Consumer Part
 
 ```js
 const cart = ["shoes", "pants", "kurta"];
 
-// Consumer Part of Promise
 const promise = createOrder(cart);
 
 promise.then(function (orderId) {
@@ -27,115 +32,23 @@ promise.then(function (orderId) {
 });
 ```
 
-### Explanation
+- `createOrder(cart)` is expected to return a Promise.
+- `.then()` handles successful fulfillment.
+- The callback receives the `orderId` and proceeds to payment.
 
-1. We call `createOrder(cart)` and expect it to return a Promise.
-2. We store the returned Promise in the `promise` variable.
-3. We use `.then()` to handle successful completion.
-4. When the Promise is fulfilled, the callback receives the `orderId`.
-5. We pass that ID to `proceedToPayment()`.
-
-**Question:** How do we implement `createOrder()` so that it returns a Promise?
-
-Let's understand the Producer Part.
-
----
-
-## 2. Producer Part – Creating a Promise
+### Producer Part
 
 JavaScript provides a built-in `Promise` constructor to create Promises.
 
-### Syntax
-
-```js
-const promise = new Promise(function (resolve, reject) {
-  // Write our logic here
-});
-```
-
-### Understanding the Promise Constructor
-
-- `new Promise()` creates a new Promise object.
-- It accepts a callback function called the **Executor Function**.
-- The Executor Function executes immediately when the Promise is created.
-- JavaScript automatically provides two functions to it:
-  - `resolve()`
-  - `reject()`
-
-These functions help us communicate whether an operation succeeded or failed.
-
----
-
-## 3. Understanding resolve() and reject()
-
-| Function | Purpose |
-|---|---|
-| `resolve(value)` | Fulfills the Promise with a value |
-| `reject(error)` | Rejects the Promise with a reason |
-
-### resolve()
-
-When an operation is successful, we call `resolve()`.
-
-```js
-resolve(orderId);
-```
-
-- The Promise becomes fulfilled.
-- The value passed to `resolve()` becomes its fulfillment value.
-- The Consumer receives this value through `.then()`.
-
-### reject()
-
-When an operation fails, we call `reject()`.
-
-```js
-const err = new Error("Cart is not Valid");
-reject(err);
-```
-
-- The Promise becomes rejected.
-- The error becomes its rejection reason.
-- The Consumer can handle it using `.catch()`.
-
-**Promise States:**
-
-- `pending` – Initial state.
-- `fulfilled` – Operation completed successfully.
-- `rejected` – Operation failed.
-
-A Promise can settle only once. Its state cannot change after fulfillment or rejection.
-
----
-
-## 4. Implementing createOrder() – Producer Part
-
-Now, let's implement the `createOrder()` function.
-
-### Mock Logic
-
-In a real-world application, creating an order involves:
-
-1. Validating the cart.
-2. Inserting the order into the database.
-3. Getting an `orderId`.
-
-For this example, we assume that `validateCart()` is already defined and the database operation is represented by a fixed order ID.
-
-### Complete Producer Code
-
 ```js
 function createOrder(cart) {
-
-  // Create a Promise
   const promise = new Promise(function (resolve, reject) {
 
     // Step 1: Validate Cart
     if (!validateCart(cart)) {
-
-      // Cart is invalid
       const err = new Error("Cart is not Valid");
       reject(err);
+      return;
     }
 
     // Step 2: Insert order into DB (Assumption)
@@ -148,171 +61,270 @@ function createOrder(cart) {
 
   });
 
-  // Return the Promise
   return promise;
 }
 ```
 
-### Explanation
+**Important Points:**
 
-**Step 1: Create a Promise**
+- `new Promise()` creates a Promise object.
+- The function passed to it is called the **Executor Function**.
+- The Executor Function executes immediately.
+- JavaScript provides two functions: `resolve` and `reject`.
+- `resolve(value)` fulfills the Promise.
+- `reject(error)` rejects the Promise.
+- Finally, we return the Promise to the Consumer.
 
-```js
-const promise = new Promise(function (resolve, reject) {
-```
-
-We create a Promise and pass an Executor Function. JavaScript automatically provides `resolve` and `reject`.
-
-**Step 2: Validate the Cart**
-
-```js
-if (!validateCart(cart)) {
-  const err = new Error("Cart is not Valid");
-  reject(err);
-}
-```
-
-If the cart is invalid, we create an Error object and reject the Promise.
-
-**Step 3: Generate Order ID**
-
-```js
-const orderId = "12345";
-```
-
-We assume the order is successfully inserted into the database and an order ID is returned.
-
-**Step 4: Handle Success**
-
-```js
-if (orderId) {
-  resolve(orderId);
-}
-```
-
-If an order ID exists, we fulfill the Promise using `resolve()`.
-
-**Step 5: Return the Promise**
-
-```js
-return promise;
-```
-
-Finally, we return the Promise so the Consumer can handle its result.
+**Mock Logic:**
+1. Validate the cart.
+2. Insert the order into the database.
+3. Generate and return an `orderId`.
 
 ---
 
-## 5. Important Correction: Why Use return After reject()?
+## 2. Understanding Promise State – Pending
 
-In the original code, we wrote:
-
-```js
-if (!validateCart(cart)) {
-  const err = new Error("Cart is not Valid");
-  reject(err);
-}
-
-const orderId = "12345";
-```
-
-**Problem:** Calling `reject()` does not automatically stop the remaining JavaScript code. The code below it can still execute.
-
-To prevent the success logic from running after validation fails, use `return`.
-
-```js
-if (!validateCart(cart)) {
-  return reject(new Error("Cart is not Valid"));
-}
-```
-
-This stops the current function's execution.
-
-Remember: A Promise can settle only once, but calling `resolve()` or `reject()` does not itself stop JavaScript execution.
-
----
-
-## 6. Complete Producer + Consumer Code
-
-Now, let's combine both parts.
+Consider this example:
 
 ```js
 const cart = ["shoes", "pants", "kurta"];
 
-// Consumer Part
 const promise = createOrder(cart);
 
-promise
+console.log(promise);
+
+promise.then(function (orderId) {
+  proceedToPayment(orderId);
+});
+```
+
+**Why might we see `Promise { <pending> }`?**
+
+A Promise has three states:
+
+| State | Meaning |
+|---|---|
+| Pending | Initial state; operation is not settled yet |
+| Fulfilled | Operation completed successfully |
+| Rejected | Operation failed |
+
+If `createOrder()` performs an asynchronous operation, such as a database request, it can return a pending Promise before the operation finishes.
+
+Once the operation completes, the Promise becomes fulfilled or rejected.
+
+**Important:** In our earlier mock implementation, `resolve()` is called synchronously. Therefore, the Promise may already be fulfilled when `console.log()` runs. `Promise { <pending> }` is not guaranteed in every implementation.
+
+---
+
+## 3. Error Handling Using .catch()
+
+What happens when an operation fails and the Promise gets rejected?
+
+We use `.catch()` to handle the error.
+
+```js
+const cart = ["shoes", "pants", "kurta"];
+
+createOrder(cart)
   .then(function (orderId) {
+    // Success handling
     proceedToPayment(orderId);
   })
   .catch(function (err) {
-    console.log(err.message);
+    // Failure handling
+    console.log(err);
   });
+```
 
-// Producer Part
-function createOrder(cart) {
+### Explanation
 
+- `.then()` handles successful fulfillment.
+- If `createOrder()` rejects the Promise, the success callback is skipped.
+- Execution moves to the nearest following rejection handler, `.catch()`.
+- The error is received as an argument.
+
+**Remember:** `.catch()` is used to handle Promise rejections and errors thrown inside earlier Promise handlers.
+
+---
+
+## 4. Promise Chaining
+
+Suppose we have an e-commerce application with these operations:
+
+1. Create an order.
+2. Proceed to payment.
+3. Display payment information.
+
+We want these operations to execute one after another.
+
+This is where **Promise Chaining** comes in.
+
+### Example
+
+```js
+const cart = ["shoes", "pants", "kurta"];
+
+createOrder(cart)
+  .then(function (orderId) {
+    console.log(orderId);
+    return orderId;
+  })
+  .then(function (orderId) {
+    return proceedToPayment(orderId);
+  })
+  .then(function (paymentInfo) {
+    console.log(paymentInfo);
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+```
+
+### Explanation
+
+**First `.then()`**
+
+```js
+.then(function (orderId) {
+  console.log(orderId);
+  return orderId;
+})
+```
+
+- Receives the `orderId`.
+- Prints it.
+- Returns the ID so the next `.then()` can use it.
+
+**Second `.then()`**
+
+```js
+.then(function (orderId) {
+  return proceedToPayment(orderId);
+})
+```
+
+- Receives the returned `orderId`.
+- Calls `proceedToPayment()`.
+- Returns its Promise so the next `.then()` waits for it.
+
+**Third `.then()`**
+
+```js
+.then(function (paymentInfo) {
+  console.log(paymentInfo);
+})
+```
+
+- Receives the resolved value from `proceedToPayment()`.
+- Displays the payment information.
+
+### Implementing proceedToPayment()
+
+For demonstration, we will create another Promise.
+
+```js
+function proceedToPayment(orderId) {
   return new Promise(function (resolve, reject) {
-
-    // Validate Cart
-    if (!validateCart(cart)) {
-      return reject(new Error("Cart is not Valid"));
-    }
-
-    // Assume order is inserted into DB
-    const orderId = "12345";
-
-    // Success Scenario
-    if (orderId) {
-      resolve(orderId);
-    }
-
+    resolve("Payment Successful");
   });
-
 }
 ```
 
-*Note: `validateCart()` and `proceedToPayment()` are assumed to be defined elsewhere. The database operation is mocked.*
+**Key Concept:** Whatever a `.then()` callback returns becomes the result for the next `.then()`.
 
-### Execution Flow
-
-**Success Scenario:**
-
-1. `createOrder(cart)` is called.
-2. A new Promise is created.
-3. The Executor Function runs immediately.
-4. Cart validation succeeds.
-5. An order ID is generated.
-6. `resolve(orderId)` fulfills the Promise.
-7. The `.then()` callback executes and proceeds to payment.
-
-**Failure Scenario:**
-
-1. `createOrder(cart)` is called.
-2. Cart validation fails.
-3. `reject(err)` rejects the Promise.
-4. The `.then()` success callback is skipped.
-5. The `.catch()` callback handles the error.
+- If it returns a normal value, the next `.then()` receives that value.
+- If it returns a Promise, the next `.then()` waits for that Promise to settle.
 
 ---
 
-## 7. Important Points to Remember
+## 5. Error Handling at Different Levels – Multiple .catch()
 
-- The Executor Function runs synchronously when a Promise is created.
-- Creating a Promise does not automatically make the operation asynchronous.
-- The Promise object is returned immediately, even if it is still pending.
-- `resolve()` fulfills the Promise; `reject()` rejects it.
-- `.then()` handles fulfillment; `.catch()` handles rejection.
-- Use `return` after `reject()` when you need to stop further execution.
+What if we want the execution to continue even if an earlier Promise fails?
+
+We can place `.catch()` at a particular point in the chain.
+
+```js
+createOrder(cart)
+  .then(function (orderId) {
+    console.log(orderId);
+    return orderId;
+  })
+  .catch(function (err) {
+    console.log("Order Error:", err.message);
+  })
+  .then(function (orderId) {
+    return proceedToPayment(orderId);
+  })
+  .then(function (paymentInfo) {
+    console.log(paymentInfo);
+  });
+```
+
+### How Does It Work?
+
+- If `createOrder()` fails, execution moves to `.catch()`.
+- The `.catch()` handles the error.
+- If the `.catch()` completes normally without throwing or returning a rejected Promise, the chain becomes fulfilled again.
+- The next `.then()` executes.
+
+**Important:** If the first `.catch()` handles an error, the next `.then()` may receive `undefined` because the catch did not return an order ID.
+
+### Multiple .catch() Blocks
+
+We can also use multiple `.catch()` blocks.
+
+```js
+createOrder(cart)
+  .then(function (orderId) {
+    return proceedToPayment(orderId);
+  })
+  .catch(function (err) {
+    console.log("Order or Payment Error:", err.message);
+  })
+  .then(function (paymentInfo) {
+    console.log(paymentInfo);
+  })
+  .catch(function (err) {
+    console.log("Final Error:", err.message);
+  });
+```
+
+Each `.catch()` handles rejections from the Promise chain before it, until that point.
+
+**Remember:**
+- A `.catch()` handles an error and, if it completes normally, allows the chain to continue.
+- If a `.catch()` throws an error or returns a rejected Promise, the next `.catch()` can handle it.
+- A `.catch()` does not automatically stop the entire chain.
 
 ---
 
-## 8. Quick Revision
+## 6. Important Points to Remember
+
+| Concept | Meaning |
+|---|---|
+| `new Promise()` | Creates a Promise |
+| `resolve()` | Fulfills a Promise |
+| `reject()` | Rejects a Promise |
+| `.then()` | Handles fulfillment |
+| `.catch()` | Handles rejection |
+| Promise Chaining | Connects multiple Promise operations |
+| `return value` | Passes a value to the next `.then()` |
+| `return promise` | Makes the next `.then()` wait for that Promise |
+
+**Common Mistakes:**
+
+1. Forgetting to return a Promise from a `.then()` callback breaks the intended chain.
+2. Forgetting `return` after `reject()` can allow remaining code to execute.
+3. A `.catch()` can recover from an error, so later `.then()` callbacks may execute.
+4. Placing a semicolon after `.catch()` ends the chain; do not place one if more `.then()` calls are intended.
+
+---
+
+## 7. Quick Revision
 
 ```js
 function getData() {
   return new Promise(function (resolve, reject) {
-
     const success = true;
 
     if (success) {
@@ -320,31 +332,39 @@ function getData() {
     } else {
       reject(new Error("Data failed"));
     }
-
   });
 }
 
 getData()
   .then(function (result) {
     console.log(result);
+    return "Next Step";
+  })
+  .then(function (value) {
+    console.log(value);
   })
   .catch(function (err) {
     console.log(err.message);
   });
 ```
 
-| Concept | Meaning |
-|---|---|
-| `new Promise()` | Creates a Promise |
-| Executor Function | Runs immediately |
-| `resolve()` | Success |
-| `reject()` | Failure |
-| `.then()` | Handles fulfillment |
-| `.catch()` | Handles rejection |
+**Output:**
+```text
+Data received
+Next Step
+```
 
-**Final Takeaway:**
+**Final Takeaways:**
 
-- **Producer:** Creates a Promise, performs the operation, calls `resolve()` or `reject()`, and returns the Promise.
-- **Consumer:** Receives the Promise and handles its result using `.then()` and `.catch()`.
+- Producer creates and returns a Promise.
+- Consumer handles it using `.then()` and `.catch()`.
+- Promise chaining connects multiple asynchronous operations.
+- Return values flow from one `.then()` to the next.
+- `.catch()` handles errors and can recover the Promise chain.
 
-> The Producer creates and returns a Promise, while the Consumer handles its result.
+> Promise Chaining makes asynchronous code cleaner, readable, and easier to manage.
+
+---
+v=U74BJcr8NeQ&list=PLlasXeu85E9eWOpw9jxHOQyGMRiBZ60aX&index=4)
+
+[Watch on YouTube – Namaste JavaScript](https://www.youtube.com/watch?v=U74BJcr8NeQ)
