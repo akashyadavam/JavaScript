@@ -514,7 +514,7 @@ fruits[1] = "Orange";   // Update element
 
 
 // 2. Modifying Methods (Original array changes)
-let arr = [1, 2, 3, 4];
+// let arr = [1, 2, 3, 4];
 
 arr.push(5);       // Add at end
 arr.pop();         // Remove from end
@@ -620,7 +620,7 @@ console.log(user.address.city); // Delhi
 
 
 // 4. Object Destructuring
-let { name, age } = student;
+// let { name, age } = student;
 
 console.log(name, age); // Ravi 22
 
