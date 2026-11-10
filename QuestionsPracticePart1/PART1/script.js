@@ -500,3 +500,182 @@ function forEachElement(arr, callback) {
 }
 forEachElement([10, 20, 30], value => console.log(value));
 // 10 20 30 
+
+
+
+
+// ==================== ARRAYS ====================
+
+// 1. Create, Access & Update
+let fruits = ["Apple", "Banana", "Mango"];
+
+console.log(fruits[0]); // Apple (Index starts from 0)
+fruits[1] = "Orange";   // Update element
+
+
+// 2. Modifying Methods (Original array changes)
+let arr = [1, 2, 3, 4];
+
+arr.push(5);       // Add at end
+arr.pop();         // Remove from end
+arr.unshift(0);    // Add at start
+arr.shift();       // Remove from start
+arr.splice(1, 2);  // Remove 2 elements from index 1
+arr.reverse();     // Reverse original array
+
+
+// 3. Extracting Methods (Original array unchanged)
+let nums = [1, 2, 3, 4, 5];
+
+let part = nums.slice(1, 3); // [2, 3] (End index excluded)
+
+
+// 4. Sorting
+let ages = [20, 5, 100, 30];
+
+ages.sort();           // Default string-based sorting
+ages.sort((a, b) => a - b); // Numeric ascending
+ages.sort((a, b) => b - a); // Numeric descending
+
+
+// 5. map() — Returns a new modified array
+let prices = [100, 200, 300];
+
+let gstPrices = prices.map(price => price * 1.18);
+// [118, 236, 354]
+
+
+// 6. filter() — Returns elements matching condition
+let even = nums.filter(num => num % 2 === 0);
+// [2, 4]
+
+
+// 7. reduce() — Converts array into a single value
+let salaries = [10000, 20000, 30000];
+
+let total = salaries.reduce((acc, val) => acc + val, 0);
+// 60000 (0 = Initial accumulator value)
+
+
+// 8. forEach() — Performs action, returns undefined
+nums.forEach((value, index) => {
+    console.log(index, value);
+});
+
+
+// 9. find(), some(), every()
+console.log(nums.find(n => n > 3));  // 4 (First match)
+console.log(nums.some(n => n > 4));  // true (At least one)
+console.log(nums.every(n => n > 0)); // true (All elements)
+
+
+// 10. Destructuring & Spread
+let colors = ["Red", "Blue", "Green"];
+
+let [first, second] = colors;
+// first = Red, second = Blue
+
+let copiedArray = [...colors, "Yellow"];
+// Copies array and adds Yellow
+
+// Reverse without modifying original array
+function reverseArray(arr) {
+    return [...arr].reverse();
+}
+
+
+// ==================== OBJECTS ====================
+
+// 1. Create & Access Properties
+let student = {
+    name: "Ravi",
+    age: 21,
+    isEnrolled: true
+};
+
+console.log(student.name);       // Dot notation
+console.log(student["name"]);    // Bracket notation
+
+student.age = 22;                // Update property
+student.course = "JavaScript";   // Add property
+student["full name"] = "Ravi Kumar"; // Multi-word key
+
+
+// 2. Dynamic Property Access
+let property = "name";
+
+console.log(student[property]); // Ravi
+
+
+// 3. Nested Objects
+let user = {
+    name: "Amit",
+    address: {
+        city: "Delhi",
+        pincode: 110001
+    }
+};
+
+console.log(user.address.city); // Delhi
+
+
+// 4. Object Destructuring
+let { name, age } = student;
+
+console.log(name, age); // Ravi 22
+
+// Nested destructuring
+let {
+    address: { city }
+} = user;
+
+console.log(city); // Delhi
+
+
+// 5. Loop Through Objects
+for (let key in student) {
+    if (Object.hasOwn(student, key)) {
+        console.log(key, student[key]);
+    }
+}
+
+
+// 6. Object.keys(), values(), entries()
+console.log(Object.keys(student));   // All keys
+console.log(Object.values(student)); // All values
+console.log(Object.entries(student)); // Key-value pairs
+
+
+// 7. Copy Objects (Shallow Copy)
+let copy1 = { ...student };
+let copy2 = Object.assign({}, student);
+
+// Both create shallow copies (nested objects are shared).
+
+
+// 8. Deep Copy (JSON Method)
+let deepCopy = JSON.parse(JSON.stringify(user));
+
+// Copies nested plain data.
+// Does not preserve functions, undefined, or Symbol values.
+
+
+// 9. Optional Chaining (?.)
+console.log(user?.address?.city);   // Delhi
+console.log(user?.profile?.email);  // undefined (No error)
+
+
+// 10. Computed Properties
+let key = "marks";
+
+let report = {
+    [key]: 89
+};
+
+console.log(report.marks); // 89
+
+
+// 11. Delete Property
+delete student.age;
+
+console.log(student.age); // undefined
